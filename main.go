@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/pcap"
@@ -12,20 +12,31 @@ import (
 var foundDevName = false
 
 func main() {
-	// Get all interfaces on the machine
+	// Find the network devices that you can use to capture packets
+	var devices []pcap.Interface
 	devices, err := pcap.FindAllDevs()
 	if err != nil {
 		log.Panicln("Cannot fetch network interfaces")
 	}
 
+	// Ask for a device a user would like to capture packets from
 	var devNameFromUser string
-	fmt.Println("Please Enter the name of the device you want to analyz its packets:")
+	fmt.Print(
+		"Please Enter the name of the device you want to analyz its packets: ",
+	)
 
 	fmt.Scanln(&devNameFromUser)
 
+	// Ask for a filter a user would like to filter the packets
+	var filter string
+	fmt.Print("Please Enter your filter: ")
+
+	fmt.Scanln(&filter)
+
 	// Check whether there exists the device with the given name
-	for _, ifDev := range devices {
-		if ifDev.Name == devNameFromUser {
+	for _, device := range devices {
+		if device.Name == devNameFromUser {
+			fmt.Println("Device found")
 			foundDevName = true
 		}
 	}
@@ -34,8 +45,14 @@ func main() {
 		log.Panicln("Cannot find the given device")
 	}
 
-	// Open the handle on the network interface with the device
-	handle, err := pcap.OpenLive(devNameFromUser, 1600, false, pcap.BlockForever)
+	// Open live device
+	handle, err := pcap.OpenLive(
+		devNameFromUser,
+		int32(65535),
+		false,
+		-1*time.Second,
+	)
+
 	if err != nil {
 		fmt.Print(err)
 		log.Panicln("Cannot open handle on the given device")
@@ -43,22 +60,32 @@ func main() {
 	defer handle.Close()
 
 	// Filter the packets that you want to sniff
-	if err := handle.SetBPFFilter("tcp and port 21"); err != nil {
+	fmt.Println("Handle open")
+	if err := handle.SetBPFFilter(filter); err != nil {
 		log.Panicln(err)
 	}
 
-	source := gopacket.NewPacketSource(handle, handle.LinkType())
+	packetSource := gopacket.NewPacketSource(
+		handle,
+		handle.LinkType(),
+	)
 
-	// Display them on the screen (or use it to do anything you desire)
-	for packet := range source.Packets() {
-		appLayer := packet.ApplicationLayer()
-		if appLayer == nil {
-			continue
-		}
+	// Opening pcap file for writing
+	// dumpFile, _ := os.Create("dump.pcap")
+	// defer dumpFile.Close()
 
-		data := appLayer.Payload()
-		if bytes.Contains(data, []byte("USER")) || bytes.Contains(data, []byte("PASS")) {
-			fmt.Println(string(data))
-		}
+	// packetWriter := pcapgo.NewWriter(dumpFile)
+	// packetWriter.WriteFileHeader(
+	// 	65535,
+	// 	layers.LinkTypeEthernet,
+	// )
+
+	// Writing pcap file
+	for packet := range packetSource.Packets() {
+		fmt.Println(packet)
+		// packetWriter.WritePacket(
+		// 	packet.Metadata().CaptureInfo,
+		// 	packet.Data(),
+		// )
 	}
 }
