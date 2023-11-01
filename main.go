@@ -19,7 +19,7 @@ func main() {
 	}
 
 	var devNameFromUser string
-	fmt.Println("Please Enter the name of the device you want to sniff:")
+	fmt.Println("Please Enter the name of the device you want to analyz its packets:")
 
 	fmt.Scanln(&devNameFromUser)
 
