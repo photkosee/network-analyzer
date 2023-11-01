@@ -3,10 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
+	"github.com/google/gopacket/pcapgo"
 )
 
 var foundDevName = false
@@ -59,7 +62,7 @@ func main() {
 	}
 	defer handle.Close()
 
-	// Filter the packets that you want to sniff
+	// Filter the packets that you want to monitor
 	fmt.Println("Handle open")
 	if err := handle.SetBPFFilter(filter); err != nil {
 		log.Panicln(err)
@@ -71,21 +74,21 @@ func main() {
 	)
 
 	// Opening pcap file for writing
-	// dumpFile, _ := os.Create("dump.pcap")
-	// defer dumpFile.Close()
+	dumpFile, _ := os.Create("dump.pcap")
+	defer dumpFile.Close()
 
-	// packetWriter := pcapgo.NewWriter(dumpFile)
-	// packetWriter.WriteFileHeader(
-	// 	65535,
-	// 	layers.LinkTypeEthernet,
-	// )
+	packetWriter := pcapgo.NewWriter(dumpFile)
+	packetWriter.WriteFileHeader(
+		65535,
+		layers.LinkTypeEthernet,
+	)
 
 	// Writing pcap file
 	for packet := range packetSource.Packets() {
 		fmt.Println(packet)
-		// packetWriter.WritePacket(
-		// 	packet.Metadata().CaptureInfo,
-		// 	packet.Data(),
-		// )
+		packetWriter.WritePacket(
+			packet.Metadata().CaptureInfo,
+			packet.Data(),
+		)
 	}
 }
