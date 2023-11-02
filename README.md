@@ -1,5 +1,5 @@
 # Network Analyzer
-> This project is mainly for fun and to explore about cybersecurity and network traffic.
+> This project is mainly for fun and to explore about cybersecurity and network traffic. I developed a tool in Go, using GoPacket to enable a user to monitor network traffic by analyzing streams of packets passing between any devices on a user’s machine. With a user-friendly CLI, a user can enter the device’s name and a filter to filter out a specific stream of packets from a particular port. This could be used to capture malicious activities on a network using the filter and customizing more features for particular usage. The tool could be customized to inject a custom packet into a network.
 
 ### What is a network analyzer?
 It is a tool used to monitor network traffic by analyzing streams of packets pass between any computers on a network.
@@ -31,3 +31,4 @@ If you don't know what are your available devices, you can use `ifconfig` to che
 - Improve CLI to be more user friendly.
 - Make use of the captured packets to analyze the traffic.
 - Make use of [GoPacket](https://pkg.go.dev/github.com/google/gopacket#hdr-Implementing_Your_Own_Decoder) to implement your own decoder to handle different kinds of packets.
+- More features such as injecting a custom packet into a network.
