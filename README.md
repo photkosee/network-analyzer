@@ -27,6 +27,9 @@ Then input the name of the device you would like to inspect, follow by the filte
 
 If you don't know what are your available devices, you can use `ifconfig` to check your network interface. And [here](https://pkg.go.dev/github.com/google/gopacket/pcap#Handle.SetBPFFilter) is the format of what you can enter as a filter.
 
+## Demo
+https://github.com/photkosee/network-analyzer/assets/114990364/fbba4b8a-710b-4830-8bbe-a915a78a427b
+
 ### Ideas for more extensions
 - Improve CLI to be more user friendly.
 - Make use of the captured packets to analyze the traffic.
