@@ -35,3 +35,6 @@ https://github.com/photkosee/network-analyzer/assets/114990364/fbba4b8a-710b-483
 - Make use of the captured packets to analyze the traffic.
 - Make use of [GoPacket](https://pkg.go.dev/github.com/google/gopacket#hdr-Implementing_Your_Own_Decoder) to implement your own decoder to handle different kinds of packets.
 - More features such as injecting a custom packet into a network.
+
+### Challenges
+The first challenge is trying to use a new language in a project, which I like to do since it's the best way to learn a new language and get familiar with it. Moreover, using a library to do a feature as I planned was also challenging, which didn't require a lot of code but needed more research and understanding of the concept. It also took me some time to develop a topic that I could do in Go and relate to both Computer Networking and Cybersecurity. Overall, it was fun, and I might be working further to improve and add more features to this tool since I didn't have much time to do this part of the project even though I found this way more interesting (my main project was doing OpenTheWire wargames).
